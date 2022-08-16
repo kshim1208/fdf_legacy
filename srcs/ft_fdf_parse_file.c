@@ -6,129 +6,124 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 12:44:36 by kshim             #+#    #+#             */
-/*   Updated: 2022/07/28 17:28:57 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/16 16:06:41 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
-#include "fdf.h"
+#include "../include/fdf.h"
 #include <fcntl.h>
+#include <unistd.h>
 #include <stdlib.h>
 
-/* 구조체 배열의 포인터 배열을 반환시키는게 나을까? */
-t_ft_fdf_pnt_data	**ft_fdf_parse_file(char *filename)
+t_ft_fdf_pnt_data	**ft_fdf_parse_file(char *filename,
+		t_ft_fdf_prg_data *prg)
 {
-	int					file_fd;
-	t_ft_fdf_pnt_data	*struct_arr;
+	t_ft_fdf_parse_data	parse;
 	t_ft_fdf_pnt_data	**struct_arr_ptr_arr;
-	t_list				*tmp_lst;
-	t_list				*tmp_ptr_lst;
-	char				*gotten_line;
-	int					gnl_ret;
-	int					prev_len; // 이전 줄의 길이;
-	int					len; // tmp_lst의 길이 - gl에서 parse한 값의 개수
-	int					size; // struct_ptr_arr의 길이 - 구조체 배열의 개수
-	// len과 size의 scope는 어디일까? 이 값을 어느 수준에서 관리할지 결정
-	// gnl 파트는 parsing용 구조체에서 다루면 될 것 같음. 줄일 수 있으면 줄이고
+	int					file_fd;
 
+	ft_memset(&parse, 0, sizeof(t_ft_fdf_parse_data));
 	file_fd = open(filename, O_RDONLY);
 	if (open < 0)
 		ft_fdf_exit("ft_fdf_parse_file", FAIL_OPEN_FILE);
-	prev_len = -1;
-	len = 0;
-	size = 0;
+	parse.prev_len = -1;
 	while (1)
 	{
-		tmp_lst = 0;
-		gnl_ret = get_next_line(file_fd, &gotten_line);
-		if (gotten_line == 0 && gnl_ret < 0)
-			ft_fdf_exit("ft_fdf_parse_file", FAIL_GNL);
-		else if (gnl_ret == 0)
-			break ; // 다 읽었을 때
-		size++;
-		ft_fdf_parse_gl_to_lst(gotten_line, tmp_lst, &len);
-		if (prev_len == -1)
-			prev_len = len;
-		else
-		{
-			if (len != prev_len)
-				ft_fdf_exit("fd_fdf_parse_file", FAIL_INPUT_LEN);
-		}
-		struct_arr = ft_fdf_set_val_to_s_lst(tmp_lst, len);
-		if (struct_arr == 0)
-			// error
-		ft_lstclear(&tmp_lst, &(ft_fdf_del_value_ptr));
-		tmp_lst = ft_lstnew(struct_arr);
-		ft_lstadd_back(&(tmp_ptr_lst), tmp_lst);
-		free(gotten_line);
-		gotten_line = 0;
+		if (ft_fdf_gnl(prg, &parse, file_fd) == 0)
+			break ;
 	}
-	struct_arr_ptr_arr = ft_fdf_set_s_lst_to_ptr_lst(tmp_ptr_lst, size);
+	close(file_fd);
+	struct_arr_ptr_arr = ft_fdf_set_s_lst_to_ptr_lst(
+			parse.tmp_ptr_lst, prg -> row);
 	if (struct_arr_ptr_arr == 0)
-		// error
-	ft_lstclear(&tmp_ptr_lst, 0);
+		ft_fdf_exit("ft_fdf_parse_file", FAIL_MEMORY_ALLOC);
+	ft_lstclear(&(parse.tmp_ptr_lst), 0);
 	return (struct_arr_ptr_arr);
 }
 
-void	ft_fdf_parse_gl_to_lst(char *gl, t_list *val_list, int *len)
+int	ft_fdf_gnl(
+		t_ft_fdf_prg_data *prg, t_ft_fdf_parse_data *parse, int file_fd)
+{
+	parse -> tmp_lst = 0;
+	parse -> gotten_line = 0;
+	parse -> gnl_ret = get_next_line(file_fd, &(parse -> gotten_line));
+	if (parse -> gotten_line == 0 && parse -> gnl_ret < 0)
+		ft_fdf_exit("ft_fdf_parse_file", FAIL_GNL);
+	else if (parse -> gotten_line == 0 && parse -> gnl_ret == 0)
+		return (0);
+	(prg -> row)++;
+	ft_fdf_parse_gl_to_lst(parse -> gotten_line, &parse -> tmp_lst,
+		prg);
+	if (parse -> prev_len == -1)
+		parse -> prev_len = prg -> column;
+	if (parse -> prev_len != prg -> column)
+		ft_fdf_exit("fd_fdf_parse_file", FAIL_INPUT_LEN);
+	parse -> struct_arr = ft_fdf_set_val_to_s_lst(
+			parse -> tmp_lst, prg -> column);
+	if (parse -> struct_arr == 0)
+		ft_fdf_exit("ft_fdf_parse_file", FAIL_MEMORY_ALLOC);
+	ft_lstclear(&(parse -> tmp_lst), &(ft_fdf_del_value_ptr));
+	parse -> tmp_lst = ft_lstnew(parse -> struct_arr);
+	ft_lstadd_back(&(parse -> tmp_ptr_lst), parse -> tmp_lst);
+	free(parse -> gotten_line);
+	return (1);
+}
+
+void	ft_fdf_parse_gl_to_lst(char *gl, t_list **val_list,
+	t_ft_fdf_prg_data *prg)
 {
 	char	*now;
-	char 	*start;
-	int		i;
+	char	*str_start;
 
-	i = 0;
 	now = gl;
-	start = &(now[i]); 
-	while (now[i] != 0)
+	prg -> column = 0;
+	while (*now != '\0' && *now != '\n')
 	{
-
-		if (i >= 0)
+		if (ft_isdigit(*now) == 0 && ft_issign(*now) == 0
+			&& ft_isspace(*now) == 0 && *now != ',')
+			ft_fdf_exit("ft_fdf_parse_gl_to_lst", FAIL_INVAL_VALUE);
+		if (ft_isspace(*now) == 0)
 		{
-			if (ft_isdigit(now[i]) == 0 && ft_issign(now[i] == 0)
-				&& ft_isspace(now[i]) == 0)
-				ft_fdf_exit("ft_fdf_parse_gl_to_lst", FAIL_INVAL_VALUE);
+			str_start = now;
+			ft_fdf_set_gl_to_lst(str_start, &now,
+				val_list, prg -> min_max_z);
+			(prg -> column)++;
+			if (*now == '\0' || *now == '\n')
+				return ;
 		}
-		if (ft_isspace(now[i]) == 0)
-		{
-			start = &(now[i]);
-			if (i == 0)
-				i++;
-			while (now[i] != 0)
-			{
-				if ((ft_issign(now[i - 1]) == 1 && ft_isdigit(now[i]) == 0)
-					|| (ft_isdigit(now[i - 1]) == 1 && ft_issign(now[i]) == 1))
-					ft_fdf_exit("ft_fdf_parse_gl_to_lst", FAIL_INVAL_VALUE);
-				if (ft_isdigit(now[i - 1]) == 1 && ft_isspace(now[i]) == 1)
-				{
-					ft_fdf_set_gl_to_lst(start, val_list); // 숫자가 나오다가 공백 나옴 -> parsing해서 lst에 넣기
-					len++;
-					break ;
-				}
-				i++;
-			}
-		}
-		i++;
-	}	
-	if ((ft_issign(now[i - 1]) == 1 && now[i] == '\0'))
-		ft_fdf_exit("ft_fdf_parse_gl_to_lst", FAIL_INVAL_VALUE);
+		now++;
+	}
 	return ;
 }
 
-void	ft_fdf_set_gl_to_lst(char *start, t_list *val_list)
+void	ft_fdf_set_gl_to_lst(char *str_start, char **str_end,
+	t_list **val_list, int min_max_z[])
 {
 	t_list				*tmp_list;
+	t_value_list		*value_list;
 	int					value;
-	int					*content_value;
 
- // 사용 불가능한 문자는 parse_gl_to_lst에서 이미 처리되니 제일 처음부터 atoi만 하면 됨, libft atoi는 보는 범위 넓으니 전용 atoi 필요할지도? 아니면 int만 감지하게 libft를 수정하자
-	if (ft_atoi_fdf(start, &value) == 0)
+	if (ft_atoi_fdf(str_start, str_end, &value) == 0)
 		ft_fdf_exit("ft_fdf_set_gl_to_lst", FAIL_ATOI);
-	content_value = (int *)malloc(sizeof(int));
-	*content_value = value;
-	tmp_list = ft_lstnew(content_value);
+	value_list = (t_value_list *)malloc(sizeof(t_value_list));
+	if (value_list == 0)
+		ft_fdf_exit("ft_fdf_set_gl_to_lst", FAIL_MEMORY_ALLOC);
+	if (value >= min_max_z[1])
+		min_max_z[1] = value;
+	if (value <= min_max_z[0])
+		min_max_z[0] = value;
+	value_list -> val = value;
+	if (**str_end == ',')
+	{
+		if (ft_hex_atoi_fdf(*str_end, str_end, &value) == 0)
+			ft_fdf_exit("ft_fdf_set_gl_to_lst", FAIL_HEX_ATOI);
+		value_list -> color = value;
+	}
+	tmp_list = ft_lstnew(value_list);
 	if (tmp_list == 0)
 		ft_fdf_exit("ft_fdf_set_gl_to_lst", FAIL_MEMORY_ALLOC);
-	ft_lstadd_back(&val_list, tmp_list);
+	ft_lstadd_back(val_list, tmp_list);
 	return ;
 }
 
@@ -136,14 +131,16 @@ t_ft_fdf_pnt_data	*ft_fdf_set_val_to_s_lst(t_list *val_list, int len)
 {
 	t_ft_fdf_pnt_data	*struct_arr;
 	int					i;
-	
+
 	struct_arr = (t_ft_fdf_pnt_data *)malloc(sizeof(t_ft_fdf_pnt_data) * len);
 	if (struct_arr == 0)
 		ft_fdf_exit("ft_fdf_parse_file", FAIL_MEMORY_ALLOC);
+	ft_memset(struct_arr, 0, sizeof(t_ft_fdf_pnt_data) * len);
 	i = 0;
 	while (i < len)
 	{
-		struct_arr[i].z = *((double *)(val_list -> content));
+		struct_arr[i].z = ((t_value_list *)(val_list -> content))-> val;
+		struct_arr[i].color = ((t_value_list *)(val_list -> content))-> color;
 		val_list = val_list -> next;
 		i++;
 	}
@@ -154,8 +151,9 @@ t_ft_fdf_pnt_data	**ft_fdf_set_s_lst_to_ptr_lst(t_list *ptr_arr, int size)
 {
 	t_ft_fdf_pnt_data	**struct_arr_ptr_arr;
 	int					i;
-	
-	struct_arr_ptr_arr = (t_ft_fdf_pnt_data **)malloc(sizeof(t_ft_fdf_pnt_data *) * size);
+
+	struct_arr_ptr_arr = (t_ft_fdf_pnt_data **)malloc(
+			sizeof(t_ft_fdf_pnt_data *) * size);
 	if (struct_arr_ptr_arr == 0)
 		ft_fdf_exit("ft_fdf_parse_file", FAIL_MEMORY_ALLOC);
 	i = 0;

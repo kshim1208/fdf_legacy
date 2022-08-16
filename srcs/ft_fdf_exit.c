@@ -6,13 +6,13 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 12:51:11 by kshim             #+#    #+#             */
-/*   Updated: 2022/07/28 17:29:12 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/16 15:35:52 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../libft/libft.h"
-#include "fdf.h"
-#include "stdio.h"
+#include "../include/fdf.h"
+#include <stdio.h>
 
 void    ft_fdf_exit(char *func_name, int msg_index)
 {
@@ -40,6 +40,8 @@ void	ft_px_set_error_message(char *message[])
 	message[FAIL_INVAL_VALUE] = " : invalid value in input file";
 	message[FAIL_INPUT_LEN] = " : invalid input line length)";
 	message[FAIL_ATOI] = " : fail to atoi";
+	message[FAIL_HEX_ATOI] = " : fail to hex atoi";
+	
 	/*
 	message[FAIL_REDRCT] = " : fail to redirect";
 	message[FAIL_EXECVE] = " : fail to execve()";
