@@ -6,7 +6,7 @@
 #    By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/05 14:14:37 by kshim             #+#    #+#              #
-#    Updated: 2022/08/12 16:39:21 by kshim            ###   ########.fr        #
+#    Updated: 2022/08/17 12:56:13 by kshim            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ SRCSDIR = ./srcs/
 
 BONUS_SRCSDIR = ./srcs_bonus/
 
-SRCS_FILES = fdf_main.c ft_fdf_parse_file.c ft_fdf_output.c ft_fdf_rotate.c ft_fdf_draw.c ft_fdf_mlx_img.c ft_fdf_key_event.c ft_fdf_utils.c ft_fdf_exit.c ft_fdf_lst.c get_next_line.c
+SRCS_FILES = fdf_main.c ft_fdf_parse_file.c ft_fdf_output.c ft_fdf_rotate.c ft_fdf_draw.c ft_fdf_mlx_img.c ft_fdf_key_event.c ft_fdf_utils.c ft_fdf_struct.c ft_fdf_exit.c ft_fdf_lst.c get_next_line.c
 
 BONUS_SRCS_FILES = 
 

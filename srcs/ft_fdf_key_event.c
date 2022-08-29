@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 17:24:09 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/16 14:04:16 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/24 12:08:11 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,9 +63,9 @@ int	ft_fdf_key_event(int key, t_ft_fdf_data_set *set)
 	}
 	else if (key == KEY_E_ZOOMOUT)
 	{
-		if (set -> prg -> zoom > 0.1)
+		if (set -> prg -> zoom > 0.05)
 		{
-			set -> prg -> zoom -= 0.1;
+			set -> prg -> zoom -= 0.05;
 		}
 		else
 			set -> prg -> print = 0;

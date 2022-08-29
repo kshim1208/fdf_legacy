@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 12:44:36 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/16 16:06:41 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/24 11:56:11 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,6 +109,7 @@ void	ft_fdf_set_gl_to_lst(char *str_start, char **str_end,
 	value_list = (t_value_list *)malloc(sizeof(t_value_list));
 	if (value_list == 0)
 		ft_fdf_exit("ft_fdf_set_gl_to_lst", FAIL_MEMORY_ALLOC);
+	ft_memset(value_list, 0, sizeof(t_value_list));
 	if (value >= min_max_z[1])
 		min_max_z[1] = value;
 	if (value <= min_max_z[0])
@@ -120,6 +121,8 @@ void	ft_fdf_set_gl_to_lst(char *str_start, char **str_end,
 			ft_fdf_exit("ft_fdf_set_gl_to_lst", FAIL_HEX_ATOI);
 		value_list -> color = value;
 	}
+	else
+		value_list -> color = 0xFFFFFF;
 	tmp_list = ft_lstnew(value_list);
 	if (tmp_list == 0)
 		ft_fdf_exit("ft_fdf_set_gl_to_lst", FAIL_MEMORY_ALLOC);

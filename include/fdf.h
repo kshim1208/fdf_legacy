@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 11:18:23 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/16 17:34:34 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/24 13:34:38 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,21 @@ typedef struct s_list
 	struct s_list	*next;
 }				t_list;
 
+typedef struct s_fdf_draw_line
+{
+	double	length;
+	double	height;
+	int		x_dir;
+	int		y_dir;
+	double	mid;
+	int		i;
+	int		codomain;
+	int		color;
+	double	clr_change[3];
+	double	clr_accum[3];
+	int		hex_power[6];
+}				t_ft_fdf_draw_line;
+
 typedef struct s_fdf_parse_data{
 	t_ft_fdf_pnt_data	*struct_arr;
 	t_list				*tmp_lst;
@@ -124,14 +139,18 @@ t_ft_fdf_pnt_data	*ft_fdf_set_val_to_s_lst(t_list *val_list, int len);
 t_ft_fdf_pnt_data	**ft_fdf_set_s_lst_to_ptr_lst(t_list *ptr_arr, int size);
 
 void				ft_fdf_mlx(t_ft_fdf_prg_data *prg_data,
-						t_ft_fdf_pnt_data **pnt_data);
+						t_ft_fdf_pnt_data **pnt_data, int argc, char **argv);
 t_mlx_img_data		*ft_mlx_init_img_data(void	*img_ptr);
 void				ft_fdf_init_output_data(t_ft_fdf_data_set *set);
-void				ft_fdf_set_pnt_data(t_ft_fdf_data_set *set);
+void				ft_fdf_set_pnt_data(t_ft_fdf_data_set *set,
+						int argc, char **argv);
+void				ft_fdf_set_pnt_len(t_ft_fdf_data_set *set);
+void				ft_fdf_check_pnt_len(t_ft_fdf_data_set *set);
 void				ft_fdf_set_x_y_len(int i, int j, t_ft_fdf_data_set *set);
 
 void				ft_fdf_isomet_project(t_ft_fdf_data_set *set);
-void				ft_fdf_rotate_axis_all(t_ft_fdf_pnt_data *draw, t_ft_fdf_data_set *set);
+void				ft_fdf_rotate_axis_all(t_ft_fdf_pnt_data *draw,
+						t_ft_fdf_data_set *set);
 void				ft_fdf_rotate_axis_x(t_ft_fdf_pnt_data *draw,
 						t_ft_fdf_data_set *set);
 void				ft_fdf_rotate_axis_y(t_ft_fdf_pnt_data *draw,
@@ -143,9 +162,10 @@ void				ft_fdf_iter_draw_line(int i, int j,
 						t_ft_fdf_data_set *set);
 void				ft_fdf_after_zoom(t_ft_fdf_pnt_data *after_zoom,
 						t_ft_fdf_pnt_data *bef_zoom, t_ft_fdf_prg_data *prg);
-void				t_ft_fdf_draw_line(t_ft_fdf_pnt_data *pnt1,
-						t_ft_fdf_pnt_data *pnt2, t_mlx_img_data *img_data,
-						t_ft_fdf_data_set *set);
+void				ft_fdf_draw_line(t_ft_fdf_pnt_data *pnt1,
+						t_ft_fdf_pnt_data *pnt2, t_ft_fdf_data_set *set);
+void				ft_fdf_line_pixel_color(t_ft_fdf_draw_line *line_data);
+int					ft_fdf_calc_color_change(double *clr_accum, int hex_power);
 void				ft_mlx_pixel_put(t_mlx_img_data *data,
 						int x, int y, int color);
 
@@ -160,6 +180,12 @@ void				ft_fdf_free_str_arr_ptr_arr(t_ft_fdf_prg_data *prg_data,
 						t_ft_fdf_pnt_data **pnt_data);
 void				ft_fdf_matrix_iterator(t_ft_fdf_data_set *set,
 						void (*iter)(int, int, t_ft_fdf_data_set *));
+void				ft_fdf_hex_diviner(int color_pnt, int pnt[]);
+
+void				ft_fdf_init_draw_line(t_ft_fdf_draw_line *line_data,
+						t_ft_fdf_pnt_data *pnt1, t_ft_fdf_pnt_data *pnt2);
+void				ft_fdf_set_clr_change(t_ft_fdf_draw_line *line_data,
+						int color_pnt1, int color_pnt2);
 
 void				ft_fdf_exit(char *func_name, int msg_index);
 void				ft_px_set_error_message(char *message[]);
@@ -174,5 +200,8 @@ t_list				*ft_lstlast(t_list *lst);
 void				ft_lstadd_back(t_list **lst, t_list *new);
 void				ft_lstdelone(t_list *lst, void (*del)(void *));
 void				ft_lstclear(t_list **lst, void (*del)(void *));
+
+//test 함수
+void	ft_fdf_print(int i, int j, t_ft_fdf_data_set *set);
 
 #endif

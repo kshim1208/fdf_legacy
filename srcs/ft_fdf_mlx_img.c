@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 16:27:47 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/16 13:14:36 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/24 12:07:23 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ t_mlx_img_data	*ft_mlx_init_img_data(void	*img_ptr)
 	img -> img_ptr = img_ptr;
 	img -> addr = 0;
 	img -> bits_per_pixel = 8 * 4;
-	img -> line_length = 1600 * 4;
+	img -> line_length = 4;
 	img -> endian = 0;
 	return (img);
 }

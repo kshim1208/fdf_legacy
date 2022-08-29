@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 14:35:30 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/16 16:05:05 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/17 17:12:54 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,9 @@ int	ft_atoi_fdf(char *str, char **end, int *num)
 		return (1);
 	}
 	else
+	{
 		return (0);
+	}
 }
 
 int	ft_hex_atoi_fdf(char *str, char **end, int *num)
@@ -76,9 +78,9 @@ int	ft_hex_c_to_val(char **str, int *ret)
 		if (**str >= '0' && **str <= '9')
 			*ret = *ret * 16 + (**str - '0');
 		else if (**str >= 'A' && **str <= 'F')
-			*ret = *ret * 16 + (**str - '0') - 55;
+			*ret = *ret * 16 + ((**str - 'A') + 10);
 		else if (**str >= 'a' && **str <= 'f')
-			*ret = *ret * 16 + (**str - '0') - 87;
+			*ret = *ret * 16 + ((**str - 'a') + 10);
 		else
 			return (0);
 		len++;
@@ -131,6 +133,20 @@ void	ft_fdf_matrix_iterator(t_ft_fdf_data_set *set,
 			j++;
 		}
 		i++;
+	}
+	return ;
+}
+
+void	ft_fdf_hex_diviner(int color_pnt, int pnt[])
+{
+	int		i;
+
+	i = 6;
+	while (i != 0)
+	{
+		pnt[i - 1] = color_pnt % 16;
+		color_pnt = color_pnt / 16;
+		i--;
 	}
 	return ;
 }
