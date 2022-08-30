@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 14:37:32 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/18 15:30:58 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/30 10:09:38 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,12 @@ void	ft_fdf_init_draw_line(t_ft_fdf_draw_line *line_data,
 {
 	ft_memset(line_data, 0, sizeof(t_ft_fdf_draw_line));
 	line_data -> length = fabs(pnt2 -> x - pnt1 -> x);
-	line_data -> height = fabs(pnt2 -> y - pnt1 -> y);
+	line_data -> height = fabs((-1 * pnt2 -> y) - (-1 * pnt1 -> y));
 	if (pnt1 -> x < pnt2 -> x)
 		line_data -> x_dir = 1;
 	else
 		line_data -> x_dir = -1;
-	if (pnt1 -> y < pnt2 -> y)
+	if ((-1 * pnt1 -> y) < (-1 * pnt2 -> y))
 		line_data -> y_dir = 1;
 	else
 		line_data -> y_dir = -1;

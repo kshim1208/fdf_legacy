@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 11:18:23 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/30 11:36:29 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/24 13:34:38 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,17 +19,17 @@
 
 # include <stdio.h>
 
-# define KEY_A_Y_R		2
-# define KEY_D_Y		0
-# define KEY_E_ZOOMOUT	14
-# define KEY_F_Z_R		3
-# define KEY_I_ISOMET	34
-# define KEY_P_PARALLEL 35
-# define KEY_Q_ZOOMIN	12
-# define KEY_R_Z		15
-# define KEY_S_X_R		1
-# define KEY_W_X		13
-# define KEY_ESC 		53 
+# define KEY_A_Y_R		97
+# define KEY_D_Y		100
+# define KEY_E_ZOOMOUT	101
+# define KEY_F_Z_R		102
+# define KEY_I_ISOMET	105
+# define KEY_P_PARALLEL 112
+# define KEY_Q_ZOOMIN	113
+# define KEY_R_Z		114
+# define KEY_S_X_R		115
+# define KEY_W_X		119
+# define KEY_ESC 		65307
 
 typedef struct s_mlx_data {
 	void	*img_ptr;

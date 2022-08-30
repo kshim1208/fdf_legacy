@@ -6,12 +6,11 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 14:35:30 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/17 17:12:54 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/30 08:10:15 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
-#include "../minilibx_linux/mlx.h"
 #include <stdlib.h>
 
 int	ft_atoi_fdf(char *str, char **end, int *num)

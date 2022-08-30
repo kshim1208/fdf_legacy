@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:29:05 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/24 14:42:21 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/30 11:33:26 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@
 void	ft_fdf_isomet_project(t_ft_fdf_data_set *set)
 {
 	set -> prg -> degree[0] = 0;
-	set -> prg -> degree[1] = 0;
-	set -> prg -> degree[2] = 45;
+	set -> prg -> degree[1] = 45;
+	set -> prg -> degree[2] = 0;
 	return ;
 }
 

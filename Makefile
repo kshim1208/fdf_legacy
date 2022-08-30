@@ -6,7 +6,7 @@
 #    By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/07/05 14:14:37 by kshim             #+#    #+#              #
-#    Updated: 2022/08/17 12:56:13 by kshim            ###   ########.fr        #
+#    Updated: 2022/08/30 08:10:33 by kshim            ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -55,9 +55,9 @@ else
 endif
 
 $(NAME): $(OBJECTS)
-	make -C $(MLX_WSL2) all
+	make -C $(MLX_MACOS) all
 	make -C ./libft all
-	$(CC) $(CFLAGS) $(DEBUG) $(HEADERS) $(OBJECTS) $(MATHLIBOPTION) -Llibft -lft $(MLX_FLAG_WSL2_UBUNTU) -o $(NAME)
+	$(CC) $(CFLAGS) $(DEBUG) $(HEADERS) $(OBJECTS) $(MATHLIBOPTION) -Llibft -lft $(MLX_FLAG_CLUSTER_MACOS) -o $(NAME)
 
 %.o	: %.c
 	$(CC) $(CFLAGS) $(DEBUG) $(HEADERS) -Imlx -c $< -o $@
@@ -68,12 +68,12 @@ bonus:
 	make DO_BONUS=1 all
 	
 clean:
-	make -C $(MLX_WSL2) clean
+	make -C $(MLX_MACOS) clean
 	make -C ./libft clean
 	$(RM) $(RMFLAGS) $(OBJS) $(BONUS_OBJS)
 
 fclean: clean
-	-C $(MLX_WSL2) $(RM) $(RMFLAGS) libmlx.a
+	-C $(MLX_MACOS) $(RM) $(RMFLAGS) libmlx.a
 	make -C ./libft fclean
 	$(RM) $(RMFLAGS) $(NAME)
 

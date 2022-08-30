@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/05 13:22:44 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/24 12:54:49 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/30 10:15:01 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,9 @@ void	ft_fdf_iter_draw_line(int i, int j, t_ft_fdf_data_set *set)
 	ft_fdf_after_zoom(&draw, &(set -> pnt[i][j]), set -> prg);
 	ft_fdf_rotate_axis_all(&draw, set);
 	if ((draw.x > 0 && draw.x < set -> prg -> window[0])
-		&& (draw.y > 0 && draw.y < set -> prg -> window[1]))
+		&& ((-1 * draw.y) > 0 && (-1 * draw.y) < set -> prg -> window[1]))
 		ft_mlx_pixel_put(set -> img, draw.x,
-			draw.y, draw.color);
+			(-1 * draw.y), draw.color);
 	if (j != 0)
 	{
 		ft_fdf_after_zoom(&draw_prev_j, &(set -> pnt[i][j - 1]), set -> prg);
@@ -84,9 +84,9 @@ void	ft_fdf_draw_line(t_ft_fdf_pnt_data *pnt1, t_ft_fdf_pnt_data *pnt2,
 			}
 			ft_fdf_line_pixel_color(&line_data);
 			if ((pnt1 -> x + line_data.i > 0 && pnt1 -> x + line_data.i < set -> prg -> window[0])
-				&& ((pnt1 -> y + line_data.codomain > 0) && (pnt1 -> y + line_data.codomain < set -> prg -> window[1])))
+				&& ((-1 * pnt1 -> y + line_data.codomain > 0) && (-1 * pnt1 -> y + line_data.codomain < set -> prg -> window[1])))
 				ft_mlx_pixel_put(set -> img, pnt1 -> x + line_data.i,
-					pnt1 -> y + line_data.codomain, line_data.color);
+					-1 * pnt1 -> y + line_data.codomain, line_data.color);
 			line_data.i += line_data.x_dir;
 		}
 	}
@@ -94,8 +94,8 @@ void	ft_fdf_draw_line(t_ft_fdf_pnt_data *pnt1, t_ft_fdf_pnt_data *pnt2,
 	{
 		line_data.i = line_data.y_dir;
 		line_data.mid = (2 * line_data.length) - line_data.height;
-		while ((line_data.y_dir == 1 && pnt1 -> y + line_data.i < pnt2 -> y)
-			|| (line_data.y_dir == -1 && pnt1 -> y + line_data.i > pnt2 -> y))
+		while ((line_data.y_dir == 1 && -1 * pnt1 -> y + line_data.i < -1 * pnt2 -> y)
+			|| (line_data.y_dir == -1 && -1 * pnt1 -> y + line_data.i > -1 * pnt2 -> y))
 		{
 			if (line_data.mid < 0)
 			{
@@ -108,9 +108,9 @@ void	ft_fdf_draw_line(t_ft_fdf_pnt_data *pnt1, t_ft_fdf_pnt_data *pnt2,
 			}
 			ft_fdf_line_pixel_color(&line_data);
 			if ((pnt1 -> x + line_data.codomain > 0 && pnt1 -> x + line_data.codomain < set -> prg -> window[0])
-				&& ((pnt1 -> y + line_data.i > 0) && (pnt1 -> y + line_data.i < set -> prg -> window[1])))
+				&& (-1 * pnt1 -> y + line_data.i > 0) && (-1 * pnt1 -> y + line_data.i < set -> prg -> window[1]))
 				ft_mlx_pixel_put(set -> img, pnt1 -> x + line_data.codomain,
-					pnt1 -> y + line_data.i, line_data.color);
+					-1 * pnt1 -> y + line_data.i, line_data.color);
 			line_data.i += line_data.y_dir;
 		}
 	}

@@ -6,12 +6,12 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/09 17:24:09 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/24 12:08:11 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/30 08:09:26 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
-#include "../minilibx_linux/mlx.h"
+#include "../mlx/mlx.h"
 
 // 회전 함수 구조 조절
 // key event에서 실행하기 좋은 형태 고려

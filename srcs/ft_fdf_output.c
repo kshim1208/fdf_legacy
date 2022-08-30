@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/03 15:21:38 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/24 13:54:59 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/30 10:00:37 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	ft_fdf_init_output_data(t_ft_fdf_data_set *set)
 	set -> output -> org_pnt[0] = set -> output -> wht_sp[0];
 	set -> output -> org_pnt[1] = set -> output -> wht_sp[1];
 	set -> prg -> axis_pnt[0] = set -> prg -> window[0] / 2;
-	set -> prg -> axis_pnt[1] = set -> prg -> window[1] / 2;
+	set -> prg -> axis_pnt[1] = -1 * (set -> prg -> window[1] / 2);
 	set -> prg -> axis_pnt[2] = (set -> prg -> min_max_z[1])
 		- (((set -> prg -> min_max_z[1]) - (set -> prg -> min_max_z[0])) / 2);
 	ft_fdf_set_pnt_len(set);
@@ -95,6 +95,7 @@ void	ft_fdf_check_pnt_len(t_ft_fdf_data_set *set)
 			(set -> output -> pnt_len));
 	set -> pnt[0][0].y = set -> output -> org_pnt[1] + (
 			(set -> output -> pnt_len));
+	set -> pnt[0][0].y *= -1;
 	check.x = set -> pnt[0][0].x;
 	check.y = set -> pnt[0][0].y;
 	check.z = set -> pnt[0][0].z;
@@ -115,6 +116,7 @@ void	ft_fdf_set_x_y_len(int i, int j, t_ft_fdf_data_set *set)
 			(set -> output -> pnt_len) * j);
 	set -> pnt[i][j].y = set -> output -> org_pnt[1] + (
 			(set -> output -> pnt_len) * i);
+	set -> pnt[i][j].y *= -1;
 	return ;
 }
 

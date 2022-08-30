@@ -6,11 +6,11 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/12 16:27:47 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/24 12:07:23 by kshim            ###   ########.fr       */
+/*   Updated: 2022/08/30 08:09:36 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../minilibx_linux/mlx.h"
+#include "../mlx/mlx.h"
 #include "stdlib.h"
 #include "../include/fdf.h"
 
