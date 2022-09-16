@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/23 11:39:54 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/24 11:48:30 by kshim            ###   ########.fr       */
+/*   Updated: 2022/09/16 13:34:58 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ int	main(int argc, char **argv)
 	prg_data.window[1] = 900;
 	prg_data.print = 0;
 	prg_data.zoom = 1;
-	ft_fdf_mlx(&prg_data, pnt_data, argc, argv);
+	ft_fdf_mlx(&prg_data, pnt_data);
 	ft_fdf_free_str_arr_ptr_arr(&prg_data, pnt_data);
+	// draw_data, after_pnt도 처리 해야함.
 	return (0);
 }

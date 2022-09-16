@@ -6,14 +6,12 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/02 12:16:37 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/03 12:58:21 by kshim            ###   ########.fr       */
+/*   Updated: 2022/09/16 12:54:26 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
 #include <stdlib.h>
-
-#include <stdio.h>
 
 t_list	*ft_lstnew(void *content)
 {

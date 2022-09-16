@@ -6,90 +6,112 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 12:29:05 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/30 11:33:26 by kshim            ###   ########.fr       */
+/*   Updated: 2022/09/16 16:50:01 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/fdf.h"
+#include "../libft/libft.h"
 #include <math.h>
-// 반복문 돌리면서 한 번 세팅할 떄 x, y, z 점 회전만 호출하게 만드는게 낫겠다.
-// 반복문 속에서 rotate_axis 계통을 호출하게 나중에 수정하자
 
-// 2번 각 변환하기 - 축 함수 2번 사용 - 
+	// scale, rotation, translation 한 번에 결합법칙으로 계산하는게 성능은 좋음.
+	// 그런데 그렇게 쓸 일이 있을까?
+	//		-> 각도에선 rotation에 해당하는 matrix만 계산 및 결합
+	//		draw 함수에서 scale과 rotation 곱하고, 그 후 translation 곱하기
 
 void	ft_fdf_isomet_project(t_ft_fdf_data_set *set)
 {
-	set -> prg -> degree[0] = 0;
-	set -> prg -> degree[1] = 45;
-	set -> prg -> degree[2] = 0;
+	set -> draw_data -> rotate[0] = 30;
+	set -> draw_data -> rotate[2] = 45;
 	return ;
 }
 
-void	ft_fdf_rotate_axis_all(t_ft_fdf_pnt_data *draw, t_ft_fdf_data_set *set)
+void	ft_fdf_rotate_axis_all(t_ft_fdf_data_set *set)
 {
-	ft_fdf_rotate_axis_x(draw, set);
-	ft_fdf_rotate_axis_y(draw, set);
-	ft_fdf_rotate_axis_z(draw, set);
+	// 나중에 각도 회전 순서에 따른 경우의 수 반영
+	ft_fdf_rotate_sin_cos(set -> draw_data);
+	ft_fdf_rotate_axis_z(set -> draw_data, set -> draw_data -> transform);
+	ft_fdf_rotate_axis_y(set);
+	ft_fdf_rotate_axis_x(set);
+	ft_fdf_rotate_set_0(set);
 	return ;
 }
 
-// set의 degree를 받아서 그 각만큼 회전시킴
-void	ft_fdf_rotate_axis_x(t_ft_fdf_pnt_data *draw, t_ft_fdf_data_set *set)
+void ft_fdf_rotate_sin_cos(t_ft_fdf_draw_data *draw_data);
 {
-	double	rot;
-	double	org_y;
-	double	org_z;
-
-	rot = set -> prg -> degree[0];
-	org_y = draw -> y;
-	org_z = draw -> z;
-	draw -> y = (
-			cos((M_PI / 180) * rot) * (org_y - (set -> prg -> axis_pnt[1])) + (
-				(-1 * sin((M_PI / 180) * rot))) * (org_z - (set -> prg -> axis_pnt[2])))
-		+ set -> prg -> axis_pnt[1];
-	draw -> z = (
-			sin((M_PI / 180) * rot) * (org_y - (set -> prg -> axis_pnt[1])) + (
-				cos((M_PI / 180) * rot)) * (org_z - (set -> prg -> axis_pnt[2])))
-		+ set -> prg -> axis_pnt[2];
+	if (draw_data -> rotate[0] != 0)
+	{
+		draw_data -> sin_theta[0] = sin((M_PI / 180) * set -> draw_data -> rotate[0]);
+		draw_data -> cos_theta[0] = cos((M_PI / 180) * set -> draw_data -> rotate[0]);
+	}
+	if (draw_data -> rotate[1] != 0)
+	{
+		draw_data -> sin_theta[1] = sin((M_PI / 180) * set -> draw_data -> rotate[1]);
+		draw_data -> cos_theta[1] = cos((M_PI / 180) * set -> draw_data -> rotate[1]);
+	}
+	if (draw_data -> rotate[2] != 0)
+	{
+		draw_data -> sin_theta[2] = sin((M_PI / 180) * set -> draw_data -> rotate[2]);
+		draw_data -> cos_theta[2] = cos((M_PI / 180) * set -> draw_data -> rotate[2]);
+	}
 	return ;
 }
 
-void	ft_fdf_rotate_axis_y(t_ft_fdf_pnt_data *draw, t_ft_fdf_data_set *set)
+void	ft_fdf_rotate_set_0(t_ft_fdf_data_set *set);
 {
-	int		rot;
-	double	org_x;
-	double	org_z;
-
-	rot = set -> prg -> degree[1];
-	org_x = draw -> x;
-	org_z = draw -> z;
-	draw -> x = (
-			cos((M_PI / 180) * rot) * (org_x - (set -> prg -> axis_pnt[0])) + (
-				sin((M_PI / 180) * rot)) * (org_z - (set -> prg -> axis_pnt[2])))
-		+ set -> prg -> axis_pnt[0];
-	draw -> z = (
-			(-1 * sin((M_PI / 180) * rot)) * (org_x - (set -> prg -> axis_pnt[0])) + (
-				cos((M_PI / 180) * rot)) * (org_z - (set -> prg -> axis_pnt[2])))
-		+ set -> prg -> axis_pnt[2];
+	set -> draw_data -> rotate[0] = 0;
+	set -> draw_data -> rotate[1] = 0;
+	set -> draw_data -> rotate[2] = 0;
 	return ;
 }
 
-void	ft_fdf_rotate_axis_z(t_ft_fdf_pnt_data *draw, t_ft_fdf_data_set *set)
-{
-	int		rot;
-	double	org_x;
-	double	org_y;
+void	ft_fdf_rotate_axis_z(t_ft_fdf_draw_data *draw_data,
+			double **trans)
+{	
+	double	z[4][4];
+	double	tmp[4][4];
+	
+	z[0][0] = draw_data -> cos_theta[2];
+	z[0][1] = draw_data -> sin_theta[2];
+	z[1][0] = -1 * (draw_data -> sin_theta[2]);
+	z[1][1] = draw_data -> cos_theta[2];
+	z[2][2] = 1;
+	z[3][3] = 1;
+	ft_fdf_cpy_matrix(trans, tmp);
+	ft_fdf_multiply_matrix(trans, z, tmp);
+	return ;
+}
 
-	rot = set -> prg -> degree[2];
-	org_x = draw -> x;
-	org_y = draw -> y;
-	draw -> x = (
-			cos((M_PI / 180) * rot) * (org_x - (set -> prg -> axis_pnt[0])) + (
-				(-1 * sin((M_PI / 180) * rot))) * (org_y - (set -> prg -> axis_pnt[1])))
-		+ set -> prg -> axis_pnt[0];
-	draw -> y = ((
-				sin((M_PI / 180) * rot) * (org_x - (set -> prg -> axis_pnt[0])) + (
-					cos((M_PI / 180) * rot)) * (org_y - (set -> prg -> axis_pnt[1])))
-			+ set -> prg -> axis_pnt[1]);
+void	ft_fdf_rotate_axis_y(t_ft_fdf_draw_data *draw_data,
+			double **trans)
+{
+	double	y[4][4];
+	double	tmp[4][4];
+	
+	y[0][0] = draw_data -> cos_theta[1];
+	y[0][2] = -1 * (draw_data -> sin_theta[1]);
+	y[1][1] = 1;
+	y[2][0] = draw_data -> sin_theta[1];
+	y[2][2] = draw_data -> cos_theta[1];
+	y[3][3] = 1;
+	ft_fdf_cpy_matrix(trans, tmp);
+	ft_fdf_multiply_matrix(trans, y, tmp);
+	return ;
+}
+
+void	ft_fdf_rotate_axis_x(t_ft_fdf_draw_data *draw_data,
+			double **trans)
+{
+	double	x[4][4];
+	double	tmp[4][4];
+	
+	x[0][0] = 1;
+	x[1][1] = draw_data -> cos_theta[0];
+	x[1][2] = draw_data -> sin_theta[0];
+	x[2][1] = -1 * (draw_data -> sin_theta[0]);
+	x[2][2] = draw_data -> cos_theta[0];
+	x[3][3] = 1;
+	ft_fdf_cpy_matrix(trans, tmp);
+	ft_fdf_multiply_matrix(trans, x, tmp);
 	return ;
 }

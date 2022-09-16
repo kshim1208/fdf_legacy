@@ -6,7 +6,7 @@
 /*   By: kshim <kshim@student.42seoul.kr>           +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/28 14:35:30 by kshim             #+#    #+#             */
-/*   Updated: 2022/08/30 08:10:15 by kshim            ###   ########.fr       */
+/*   Updated: 2022/09/16 16:49:41 by kshim            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,51 @@ void	ft_fdf_hex_diviner(int color_pnt, int pnt[])
 		pnt[i - 1] = color_pnt % 16;
 		color_pnt = color_pnt / 16;
 		i--;
+	}
+	return ;
+}
+
+void	ft_fdf_cpy_matrix(double **trans, double **tmp)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			tmp[i][j] = trans[i][j];
+			j++;
+		}
+		i++;
+	}
+	return ;
+}
+
+// tmp * z = trans
+void	ft_fdf_multiply_matrix(double **trans, double **axis, double **tmp)
+{
+	int i;
+	int j;
+	int k;
+
+	k = 0;
+	while (k < 4)
+	{
+		j = 0
+		while (j < 4)
+		{
+			i = 0
+			while (i < 4)
+			{
+				trans[k][j] += tmp[k][i] * axis[i][j];
+				i++;
+			}
+			j++;
+		}
+		k++;
 	}
 	return ;
 }
